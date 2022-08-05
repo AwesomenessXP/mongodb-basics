@@ -67,4 +67,16 @@ Notes for mongo-db:
   2) `db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },{ "_id": 3, "test": 3 }])` inserts documents with id
   3) to insert SIMILAR documents, "ordered": false -> `db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },{ "_id": 3, "test": 3 }],{ "ordered": false})`
   4) to insert UNIQUE documents, "ordered": true -> `db.inspection.insert([{ "_id": 1, "test": 1 },{ "_id": 3, "test": 3 }])` 
-  
+- findOne() looks for a document that matches the query
+- updateOne() if multiple documents match the query, only ONE will be updated
+- updateMany() updates all documents that match the query
+- to update a document:
+  1) connect to atlas cluster: `mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"`
+  2) select the collection: `use sample_training`
+  3) finds documents with zip codes `db.zips.find({"zip":"1234"}).pretty()`
+  4) counts how many documents have the city HUDSON -> `db.zips.find({"city":HUDSON"}).count()`
+  5) to update ALL of them -> `db.zips.updateMany({"city":HUDSON"}), {"$inc":{"pop":10}})`
+      - $inc is an update operator that increments the value in a field by some amount
+      - allows us to update MANY documents at the same time
+      - format -> {"$inc": {"pop": 10, "<field2>": <increment value>, ..}}
+  6) 
