@@ -1,13 +1,14 @@
-# mongodb-basics
-Notes for mongo-db:
+# Notes for mongodb
 
 ## Login:
 - user: m001-student
 - pass: m001-mongodb-basics
+- type this: `mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"`
 
 ## Chapter 1
 - document: has a field (key) and a value
 - collection: has one or many documents
+- database: has one or more collection
 - cluster: group of servers that store your data
 - How to set up:
   - connect to mongo shell
@@ -29,8 +30,8 @@ Notes for mongo-db:
 
 `mongoimport --uri="mongodb+srv://<your username>:<your password>@<your cluster>.mongodb.net/sample_supplies" --drop sales.json`
   
-- to find something in a collection:
-  1) `mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"`
+- HOW TO FIND SOMETHING IN THE COLLECTION:
+  1) `mongo "mongodb+srv://m001-student:m001-mongodb-basics@sandbox.mongodb.net/admin"`
   2) `show dbs` (shows you all of the databases you have, ex: grades, students, teachers)
   3) `use sample_training` select one of the databases
   4) `show collections` shows you the group of JSON files in the database
@@ -41,10 +42,10 @@ Notes for mongo-db:
 ## Chapter 3
 - every document MUST have a unique _id value
   - this allows for the same exact fields in different document
-- to insert a NEW document in a collection:
-  1) `mongoimport --uri="mongodb+srv://<your username>:<your password>@<your cluster>.mongodb.net/sample_supplies" --drop sales.json`
+- HOW TO INSERT A SINGLE DOCUMENT IN THE COLLECTION:
+  1) `mongoimport --uri="mongodb+srv://m001-student:m001-mongodb-basics@sandbox.mongodb.net/sample_supplies" --drop sales.json`
   2) connect to atlas cluster: `mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"`
-  3) look for the database we need: `use sample_training`
+  3) look for the collection we need: `use sample_training`
   4) get a random document from collection: `db.inspections.findOne()`
   5) `db.inspections.insert({
       "_id" : ObjectId("56d61033a378eccde8a8354f"),
@@ -62,15 +63,16 @@ Notes for mongo-db:
          }})` insert the document
   6) to check if it is inserted: `db.inspections.find({"id" : "10021-2015-ENFO", "certificate_number" : 9278806}).pretty()`
 - identical documents CAN exist in the collection as long as their _id values are different!
-- to insert MULTIPLE documents in the collection:
+- HOW TO INSERT MUTLIPLE DOCUMENTS:
   1) `db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])` inserts 3 documents
   2) `db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },{ "_id": 3, "test": 3 }])` inserts documents with id
   3) to insert SIMILAR documents, "ordered": false -> `db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },{ "_id": 3, "test": 3 }],{ "ordered": false})`
   4) to insert UNIQUE documents, "ordered": true -> `db.inspection.insert([{ "_id": 1, "test": 1 },{ "_id": 3, "test": 3 }])` 
+- *** IMPORTANT **** : if you accidentally make a new field, it won't give you an error, but instead give you a new field!!
 - findOne() looks for a document that matches the query
-- updateOne() if multiple documents match the query, only ONE will be updated
+- updateOne("_id":<number>) if multiple documents match the query, only ONE will be updated,
 - updateMany() updates all documents that match the query
-- to update a document:
+- HOW TO UPDATE A DOCUMENT:
   1) connect to atlas cluster: `mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"`
   2) select the collection: `use sample_training`
   3) finds documents with zip codes `db.zips.find({"zip":"1234"}).pretty()`
@@ -78,5 +80,18 @@ Notes for mongo-db:
   5) to update ALL of them -> `db.zips.updateMany({"city":HUDSON"}), {"$inc":{"pop":10}})`
       - $inc is an update operator that increments the value in a field by some amount
       - allows us to update MANY documents at the same time
-      - format -> {"$inc": {"pop": 10, "<field2>": <increment value>, ..}}
-  6) 
+      - format -> {"$inc": {"pop": 10, "field2": increment value, ...}}
+  6) to update ONLY ONE document: `db.zips.updateOne({"zip":"1234"}, {"$set": {"pop":17630}})`
+      - $set updates the given value of a field 
+  7) to ADD a new field: `db.grades.updateOne({"student_id":250, "class_id":339}, {"$push": {"scores": {"type": "extra credit", "score": 100}}}`
+- deleteOne() deletes ONE document, RECOMMENDED to use deleteOne("_id":<number>) to verify you delete a single document
+- deleteMany() deletes MULTIPLE documents
+- HOW TO DELETE MULTIPLE DOCUMENTS: 
+  1) get the collection: `use sample_training`
+  2) look for the document to delete: `db.inspections.find({"test":1}).pretty()`
+  3) look for another document: `db.inspections.find({"test":3}).pretty()`
+  4) delete documents w/ test 1: ``db.inspections.deleteMany({"test":1})`
+  5) delete documents w/ test 3: ``db.inspections.deleteMany({"test":3})`
+  6) to drop a collection from a database: `db.collection.drop()`
+- ** IMPORTANT ** when all collections are dropped from a DB, the DB NO LONGER APPEARS in the list of databases
+  
