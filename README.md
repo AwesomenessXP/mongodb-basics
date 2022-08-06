@@ -95,3 +95,15 @@
   6) to drop a collection from a database: `db.collection.drop()`
 - ** IMPORTANT ** when all collections are dropped from a DB, the DB NO LONGER APPEARS in the list of databases
   
+  ## Chapter 4
+  - review MQL operators:
+    - update operators: $inc, $set, $unset
+    - query operators: $eq (equal to), $ne (not equal to), $gt (greater than), $lt (less than), $gte (>=), $lte (<=)
+  - logical operators:
+    - used for more than one statement: {{<operator> : [{statement1}, {statement2}, ...]}
+    - where <operator> is:
+        - $and
+        - $or
+        - $nor
+    - used to negate: {$not {statement}}
+        - $not
