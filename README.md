@@ -160,3 +160,30 @@
 - ex: how many trips start at locations that are west of -74 longitude?
   - longitude decreases as you move west, and is the 0th element in the array
   `db.trips.find({"start station location.coordinates.0": {"$lt": -74}}).count()`
+  
+## Chapter 5 - Indexing and Aggregation Pipeline
+- ***Aggregation Framework***: its another way to query in mongodb
+- aggregation syntax: `db.listingsAndReviews.aggregate([
+                                  { "$match": { "amenities": "Wifi" } },
+                                  { "$project": { "price": 1,
+                                                  "address": 1,
+                                                  "_id": 0 }}]).pretty()`
+- aggregation FILTERS the data in a pipeline
+- $match and $project are filters:
+  `$match`: filters anything that isn't in `amenities`
+  `$project`: filters fields that are not `price` or `address` (because they both equal 1, include them)
+- `$group`: can find an array of elements in a document
+   ex: ` $group: { _id: address.country,....}`
+   another ex: `db.listingsAndReviews.aggregate([ { "$project": { "address": 1, "_id": 0 }}, { "$group": { "_id": "$address.country" }}])`
+   another ex: `db.listingsAndReviews.aggregate([
+                                  { "$project": { "address": 1, "_id": 0 }},
+                                  { "$group": { "_id": "$address.country",
+                                                "count": { "$sum": 1 } } }
+                                ])`
+  this is saying: we only want the address from each document, group them all together in a new document, then use dot notation as: "_id" : "$address.country", and for each field, ONLY get a different country!!
+- ***REMEMBER***: this does not modify the data!!
+- so basically, we can look for very specific things in the data and output an array of them!!
+  - $project is WHAT we are looking for
+  - $group is HOW we print out the data in an array (using the variable operator)
+  ex: what room types are present in the collection?
+  use: `db.listingsAndReviews.aggregate([{"$project": {"room_type": 1, "_id": 0}}, {"$group": {"_id": "$room_type"}}]).pretty()`
