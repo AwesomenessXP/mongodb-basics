@@ -162,6 +162,7 @@
   `db.trips.find({"start station location.coordinates.0": {"$lt": -74}}).count()`
   
 ## Chapter 5 - Indexing and Aggregation Pipeline
+##### Aggregation
 - ***Aggregation Framework***: its another way to query in mongodb
 - aggregation syntax: `db.listingsAndReviews.aggregate([
                                   { "$match": { "amenities": "Wifi" } },
