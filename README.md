@@ -99,33 +99,54 @@
   - review MQL operators:
     - update operators: `$inc`, `$set`, `$unset`
     - query operators: `$eq` (equal to), `$ne` (not equal to), `$gt` (greater than), `$lt` (less than), `$gt`e (>=), `$lte` (<=)
-  - logical operators:
-    - used for more than one statement: `{{<operator> : [{statement1}, {statement2}, ...]}`
-    - where <operator> is:
-        - `$and`
-        - `$or`
-        - `$nor`
-    - used to negate: `{$not {statement}}`
-        - `$not`
-  - IMPLICIT $and is different!! can write it as:
-    - `{"$and" : [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}] }`
-    - OR (the better way) -> `{"student_id": {"$gt": 25, "$lt": 100}}`
-  - $expr can be used as a variable
-  - `{ $expr: { <expression> } }`
-  - ex: `{"$expr": {"$eq": ["$start station name", "$end station id"]}}`
-  - here, `$start station name` is the VALUE of start station name, and `end station id` is the VALUE
-  - to add an element to an array OR turn a field into an array field: `$push` 
-  - when looking for a field in an array, you should list the elements the way they are shown in the document
-  - `<array field> : {"$size": <number>}}` returns documents where the array field is the length
-  - `<array field> : {"$all": <array>}}` returns documents with given elements REGARDLESS of their order in array
-  - ex: find documents with 20 amenities, including all of the amenities in the query array: 
-    - `db.listingsAndReviews.find({ "amenities": {
-                                  "$size": 20,
-                                  "$all": [ "Internet", "Wifi",  "Kitchen",
-                                           "Heating", "Family/kid friendly",
-                                           "Washer", "Dryer", "Essentials",
-                                           "Shampoo", "Hangers",
-                                           "Hair dryer", "Iron",
-                                           "Laptop friendly workspace" ]
-                                         }
-                            }).pretty()`
+- logical operators:
+  - used for more than one statement: `{{<operator> : [{statement1}, {statement2}, ...]}`
+  - where <operator> is:
+      - `$and`
+      - `$or`
+      - `$nor`
+  - used to negate: `{$not {statement}}`
+      - `$not`
+- IMPLICIT $and is different!! can write it as:
+  - `{"$and" : [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}] }`
+  - OR (the better way) -> `{"student_id": {"$gt": 25, "$lt": 100}}`
+- $expr can be used as a variable
+- `{ $expr: { <expression> } }`
+- ex: `{"$expr": {"$eq": ["$start station name", "$end station id"]}}`
+- here, `$start station name` is the VALUE of start station name, and `end station id` is the VALUE
+- to add an element to an array OR turn a field into an array field: `$push` 
+- when looking for a field in an array, you should list the elements the way they are shown in the document
+- `<array field> : {"$size": <number>}}` returns documents where the array field is the length
+- `<array field> : {"$all": <array>}}` returns documents with given elements REGARDLESS of their order in array
+- ex: find documents with 20 amenities, including all of the amenities in the query array: 
+  - `db.listingsAndReviews.find({ "amenities": {
+                                "$size": 20,
+                                "$all": [ "Internet", "Wifi",  "Kitchen",
+                                         "Heating", "Family/kid friendly",
+                                         "Washer", "Dryer", "Essentials",
+                                         "Shampoo", "Hangers",
+                                         "Hair dryer", "Iron",
+                                         "Laptop friendly workspace" ]
+                                       }
+                          }).pretty()`
+- find a listing and review that accommodates more than 6 people and has 50 reviews: 
+  - `db.listingsAndReviews.find({"accommodates": {"$gt": 6}, "reviews": {"$size": 50}}).count()`
+- Projection: specifies the fields that SHOULD or SHOULDNT be in the result
+  -ex: db.<collection>.find({ <query> }, {<projection>}})
+- Projection syntax:
+   `db.<collection>.find({<query>}, {<projection>})`
+  - 1: include in the field, 0: exclude the field
+  - ex: `db.<collection>.find({<query>}, {<field1>: 0, <field2>: 0})`
+  - another ex: What if you wanted to find ONLY the names of companies with 8 funding rounds?
+    `db.companies.find({ "funding_rounds": { "$size": 8 } }, { "name": 1, "_id": 0 })`
+- what if you want to find a SPECIFIC field in an array?
+  - we use `{<field>: "$elemMatch": {<field>: <value>}}}`
+    - where field is the name of the array, and <field>: <value> is some item in the array
+  - ex: `db.grades.find({ "class_id": 431 },
+               { "scores": { "$elemMatch": { "score": { "$gt": 85 } } }
+             }).pretty()`
+- what if you want to find all students who got extra credit?:
+  `db.grades.find({ "scores": { "$elemMatch": { "type": "extra credit" } }
+               }).pretty()`
+- what if you want to find how many offices companies have in seattle?
+  `db.companies.find({"offices": {"$elemMatch": {"city": "Seattle"}}}).count()`
