@@ -90,20 +90,27 @@
   1) get the collection: `use sample_training`
   2) look for the document to delete: `db.inspections.find({"test":1}).pretty()`
   3) look for another document: `db.inspections.find({"test":3}).pretty()`
-  4) delete documents w/ test 1: ``db.inspections.deleteMany({"test":1})`
-  5) delete documents w/ test 3: ``db.inspections.deleteMany({"test":3})`
+  4) delete documents w/ test 1: `db.inspections.deleteMany({"test":1})`
+  5) delete documents w/ test 3: `db.inspections.deleteMany({"test":3})`
   6) to drop a collection from a database: `db.collection.drop()`
 - ** IMPORTANT ** when all collections are dropped from a DB, the DB NO LONGER APPEARS in the list of databases
   
   ## Chapter 4
   - review MQL operators:
-    - update operators: $inc, $set, $unset
-    - query operators: $eq (equal to), $ne (not equal to), $gt (greater than), $lt (less than), $gte (>=), $lte (<=)
+    - update operators: `$inc`, `$set`, `$unset`
+    - query operators: `$eq` (equal to), `$ne` (not equal to), `$gt` (greater than), `$lt` (less than), `$gt`e (>=), `$lte` (<=)
   - logical operators:
-    - used for more than one statement: {{<operator> : [{statement1}, {statement2}, ...]}
+    - used for more than one statement: `{{<operator> : [{statement1}, {statement2}, ...]}`
     - where <operator> is:
-        - $and
-        - $or
-        - $nor
-    - used to negate: {$not {statement}}
-        - $not
+        - `$and`
+        - `$or`
+        - `$nor`
+    - used to negate: `{$not {statement}}`
+        - `$not`
+  - IMPLICIT $and is different!! can write it as:
+    - `{"$and" : [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}] }`
+    - OR (the better way) -> `{"student_id": {"$gt": 25, "$lt": 100}}`
+  - $expr can be used as a variable
+  - `{ $expr: { <expression> } }`
+  - ex: `{"$expr": {"$eq": ["$start station name", "$end station id"]}}`
+  - here, `$start station name` is the VALUE of start station name, and `end station id` is the VALUE
