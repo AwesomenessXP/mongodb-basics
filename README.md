@@ -5,15 +5,15 @@
 - pass: m001-mongodb-basics
 - type this: `mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"`
 
-## Chapter 1
+## Chapter 1 - Setting up MongoDB
 - document: has a field (key) and a value
 - collection: has one or many documents
 - database: has one or more collection
 - cluster: group of servers that store your data
 - How to set up:
   - connect to mongo shell
-
-## Chapter 2
+  - 
+## Chapter 2 - Import/Export, Query Data
 - BSON is a converted, more compact form of JSON
 - JSON has:
   - mongoimport
@@ -39,7 +39,7 @@
   6) `db.zips.find({"state": "NY"}).pretty()` formats the JSON in a readable way
   7) `it` iterates to the next page of results in the collection
   
-## Chapter 3
+## Chapter 3 - Creating and Editing documents
 - every document MUST have a unique _id value
   - this allows for the same exact fields in different document
 - HOW TO INSERT A SINGLE DOCUMENT IN THE COLLECTION:
@@ -95,11 +95,11 @@
   6) to drop a collection from a database: `db.collection.drop()`
 - ** IMPORTANT ** when all collections are dropped from a DB, the DB NO LONGER APPEARS in the list of databases
   
-## Chapter 4
+## Chapter 4 - Comparisons, Logic Operators, Arrays
   - review MQL operators:
     - update operators: `$inc`, `$set`, `$unset`
     - query operators: `$eq` (equal to), `$ne` (not equal to), `$gt` (greater than), `$lt` (less than), `$gt`e (>=), `$lte` (<=)
-- logical operators:
+###### Logical operators:
   - used for more than one statement: `{{<operator> : [{statement1}, {statement2}, ...]}`
   - where <operator> is:
       - `$and`
@@ -110,11 +110,13 @@
 - IMPLICIT $and is different!! can write it as:
   - `{"$and" : [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}] }`
   - OR (the better way) -> `{"student_id": {"$gt": 25, "$lt": 100}}`
+###### Variables:
 - $expr can be used as a variable
 - `{ $expr: { <expression> } }`
 - ex: `{"$expr": {"$eq": ["$start station name", "$end station id"]}}`
 - here, `$start station name` is the VALUE of start station name, and `end station id` is the VALUE
 - to add an element to an array OR turn a field into an array field: `$push` 
+###### Arrays:
 - when looking for a field in an array, you should list the elements the way they are shown in the document
 - `<array field> : {"$size": <number>}}` returns documents where the array field is the length
 - `<array field> : {"$all": <array>}}` returns documents with given elements REGARDLESS of their order in array
@@ -150,3 +152,7 @@
                }).pretty()`
 - what if you want to find how many offices companies have in seattle?
   `db.companies.find({"offices": {"$elemMatch": {"city": "Seattle"}}}).count()`
+###### Array operators and sub documents:
+- we can use dot notation to get the value of an item in a field:
+  `db.trips.findOne({ "start station location.type": "Point" })` here, start station location.type: "Point" is acccessed    through dot notation
+- ***dot notation is way is FASTER than $elemMatch***
