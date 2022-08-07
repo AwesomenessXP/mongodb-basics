@@ -156,3 +156,7 @@
 - we can use dot notation to get the value of an item in a field:
   `db.trips.findOne({ "start station location.type": "Point" })` here, start station location.type: "Point" is acccessed    through dot notation
 - ***dot notation is way is FASTER than $elemMatch***
+- to query an element in subdocument, use ***dot notation***
+- ex: how many trips start at locations that are west of -74 longitude?
+  - longitude decreases as you move west, and is the 0th element in the array
+  `db.trips.find({"start station location.coordinates.0": {"$lt": -74}}).count()`
