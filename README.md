@@ -95,7 +95,7 @@
   6) to drop a collection from a database: `db.collection.drop()`
 - ** IMPORTANT ** when all collections are dropped from a DB, the DB NO LONGER APPEARS in the list of databases
   
-  ## Chapter 4
+## Chapter 4
   - review MQL operators:
     - update operators: `$inc`, `$set`, `$unset`
     - query operators: `$eq` (equal to), `$ne` (not equal to), `$gt` (greater than), `$lt` (less than), `$gt`e (>=), `$lte` (<=)
@@ -114,3 +114,18 @@
   - `{ $expr: { <expression> } }`
   - ex: `{"$expr": {"$eq": ["$start station name", "$end station id"]}}`
   - here, `$start station name` is the VALUE of start station name, and `end station id` is the VALUE
+  - to add an element to an array OR turn a field into an array field: `$push` 
+  - when looking for a field in an array, you should list the elements the way they are shown in the document
+  - `<array field> : {"$size": <number>}}` returns documents where the array field is the length
+  - `<array field> : {"$all": <array>}}` returns documents with given elements REGARDLESS of their order in array
+  - ex: find documents with 20 amenities, including all of the amenities in the query array: 
+    - `db.listingsAndReviews.find({ "amenities": {
+                                  "$size": 20,
+                                  "$all": [ "Internet", "Wifi",  "Kitchen",
+                                           "Heating", "Family/kid friendly",
+                                           "Washer", "Dryer", "Essentials",
+                                           "Shampoo", "Hangers",
+                                           "Hair dryer", "Iron",
+                                           "Laptop friendly workspace" ]
+                                         }
+                            }).pretty()`
