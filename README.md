@@ -188,3 +188,30 @@
   - $group is HOW we print out the data in an array (using the variable operator)
   ex: what room types are present in the collection?
   use: `db.listingsAndReviews.aggregate([{"$project": {"room_type": 1, "_id": 0}}, {"$group": {"_id": "$room_type"}}]).pretty()`
+###### sort() and limit()
+- `$sort` sorts data from ascending/descending order
+  - syntax: `db.zips.find().sort({<field>: <order>})`
+    - where order is 1, 0, or -1
+- `$limit` specifies HOW MANY results we get
+- syntax for "$sort" and "$limit": `db.<collection>.find().sort().limit()`
+- what if we want to find top result?
+  ex: lets find the city with the least number of people:
+  `db.zips.find().sort({ "pop": 1 }).limit(1)`
+  why is this? it sorts by population from least people to most people
+  - `"pop": 1` means to look for populations ***increasing*** (gives us the first least populated)
+  - `"pop": 0` gives us ALL zip codes with a population of 0
+  - `"pop": -1` means search for populations ***decreasing*** (gives us the first most populated)
+    - ex: `db.zips.find().sort({ "pop": -1 }).limit(1)`
+- what if we want to find the top 3 or top 10 results?
+  - for top 10: `db.zips.find().sort({ "pop": -1 }).limit(10)` (gives top 10 results in decreasing order)
+  - for top 3: `db.zips.find().sort({ "pop": -1 }).limit(3)`
+###### Indexes:
+- this is ***FASTER*** than using $sort!!
+- an ***index*** is placed alphabetically/numerically
+- syntax: 
+  1) `db.trips.createIndex({"birth year": 1})`
+  2) `db.trips.find({"birth year": 1989})`
+  - this sorts birthdays so querying is faster!
+- helps make querying efficient BUT only good for single field indexes
+- for compound indexes (needs more than one field):
+  `db.trips.find({"start station id": 476).sort("birth year": 1)`
