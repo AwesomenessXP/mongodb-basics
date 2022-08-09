@@ -237,3 +237,14 @@
 - syntax: `db.collection.updateOne({<query>}, {<update>}, {"upsert": true})`
 - if upsert is true, update the matched document, else, insert a new document
   another example: `db.iot.updateOne({"sensor": r.sensor, "date": r.date, "valcount": {"$lt": 48}}, {"$push": {"readings": {"v": r.value, "t": r.time}}, { upsert: true}`
+## Chapter 6
+###### Aggregation Pipeline (using Atlas):
+1) $match:
+  `{
+    amenities: "Wifi"
+  }` --> get all unfiltered documents with amenities including "Wifi"
+2) $project:
+  `{
+    price: 1,
+    address: 1
+  }`
