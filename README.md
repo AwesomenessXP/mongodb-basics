@@ -215,3 +215,25 @@
 - helps make querying efficient BUT only good for single field indexes
 - for compound indexes (needs more than one field):
   `db.trips.find({"start station id": 476).sort("birth year": 1)`
+###### Data Modeling:
+- ***data modeling*** is a way to organize fields to support your app performance and querying
+- REMEMBER: data is stored the way its used!!
+- Organizing:
+  `{
+  "name": "", "age": #,
+  "pref cont": "", "conts": [{},{},{}],
+  "prescriptions": [{},{},{}, {}],
+  "allergies": [], "prior visits": [{}],
+  "next visit": "", "diagnoses": []
+  }`
+- Query:
+  `db.patient find({"name": "Cora"})`
+  `db.patient.find({"next visit": "12-15"})`
+  `db.medication.find({"uses": "flu"})`
+  `db.medication.find({"code": 329})`
+- notice how data modeling is faster and easier to read?!!?!?!
+###### Upsert:
+- ***upsert*** is a hybrid of update and insert
+- syntax: `db.collection.updateOne({<query>}, {<update>}, {"upsert": true})`
+- if upsert is true, update the matched document, else, insert a new document
+  another example: `db.iot.updateOne({"sensor": r.sensor, "date": r.date, "valcount": {"$lt": 48}}, {"$push": {"readings": {"v": r.value, "t": r.time}}, { upsert: true}`
