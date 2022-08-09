@@ -247,4 +247,16 @@
   `{
     price: 1,
     address: 1
-  }`
+  }` --> specify which fields to be included/excluded
+3) $group: 
+  `{
+    _id: "$address.country", 
+    count: {
+      $sum: 1
+    },
+    total_price: {
+      $sum: "$price"
+    }
+  }` --> return _id and field name (we can make up the field names)
+4) $count: 
+  `num_countries` ---> returns a single field and value of the number of countries aggregated
