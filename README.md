@@ -260,3 +260,4 @@
   }` --> return _id and field name (we can make up the field names)
 4) $count: 
   `num_countries` ---> returns a single field and value of the number of countries aggregated
+- a project can have different clusters (ie, different people using the same database)
